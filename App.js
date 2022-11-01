@@ -15,9 +15,18 @@ export default function App() {
   const [buttonText, setButtonText] = useState('Start');
   const [newTimerModalVisible, setNewTimerModalVisible] = useState(false);
 
-  const onPressStart = () => {
+  const handlePressStart = () => {
     setCountingDown(!countingDown);
   }
+
+  const handlePressSave = (text, time) => {
+    let allTimersCopy = [...allTimers];
+    allTimersCopy.push({id: 3, text, remaining: time});
+    setAllTimers(allTimersCopy);
+    setNewTimerModalVisible(false);
+  };
+
+
 
 
 
@@ -73,16 +82,7 @@ export default function App() {
     )
   })
 
-  // const TimerList = () => {
-  //   return (
-  //     <View style={styles.container}>
-  //       <FlatList
-  //         data={allTimers}
-  //         renderItem={({item}) => <Timer timeRemaining={item.remaining} />}
-  //       />
-  //     </View>
-  //   );
-  // }
+
 
 
 
@@ -91,14 +91,16 @@ export default function App() {
     <View style={styles.appContainer}>
       <NewTimerModal style={styles.newTimerModal}
         visible={newTimerModalVisible}
-        onPress={() => { setNewTimerModalVisible(false) }} />
+        onPressCancel={() => { setNewTimerModalVisible(false) }}
+        onPressSave={handlePressSave}
+         />
       {/* {timers} */}
-        <TimerList data={allTimers} />
+      <TimerList data={allTimers} />
       <View style={styles.buttonContainer}>
         <View style={styles.button}>
           <Button
             title={buttonText}
-            onPress={onPressStart}
+            onPress={handlePressStart}
             color='green' />
         </View>
         <View style={styles.button}>

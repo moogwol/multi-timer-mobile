@@ -8,7 +8,7 @@ const Timer = (props) => {
     <View style={styles.timerContainer}>
       <TimerName
         style={styles.text}
-        text="press ups" />
+        text={props.text} />
       <Clock style={styles.clock}
         timeRemaining={props.timeRemaining} />
     </View>
@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingLeft: 8,
     paddingRight: 8,
+    margin: 8,
   },
   text: {
     flex: 2,

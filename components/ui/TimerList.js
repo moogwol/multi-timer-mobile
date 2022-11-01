@@ -7,7 +7,9 @@ const TimerList = (props) => {
         <View style={styles.listContainer}>
             <FlatList
                 data={props.data}
-                renderItem={({ item }) => <Timer timeRemaining={item.remaining} />}
+                renderItem={({ item }) => <Timer
+                    text={item.text}
+                    timeRemaining={item.remaining} />}
             />
         </View>
     );
