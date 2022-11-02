@@ -19,9 +19,9 @@ export default function App() {
     setCountingDown(!countingDown);
   }
 
-  const handlePressSave = (text, time) => {
+  const handlePressSave = (id, text, time) => {
     let allTimersCopy = [...allTimers];
-    allTimersCopy.push({id: 3, text, remaining: time});
+    allTimersCopy.push({id, text, remaining: time});
     setAllTimers(allTimersCopy);
     setNewTimerModalVisible(false);
   };
