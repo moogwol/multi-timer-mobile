@@ -3,17 +3,18 @@ import { useState, useEffect } from 'react';
 import Timer from './components/ui/Timer';
 import NewTimerModal from './components/ui/NewTimerModal';
 import TimerList from './components/ui/TimerList';
-import AllTimers from './AllTimers';
-
+import { Audio } from 'expo-av';
+import { setStatusBarBackgroundColor } from 'expo-status-bar';
 
 
 export default function App() {
 
-  const [allTimers, setAllTimers] = useState(AllTimers);
+  const [allTimers, setAllTimers] = useState([]);
   const [currentTimer, setCurrentTimer] = useState(0)
   const [countingDown, setCountingDown] = useState(false);
   const [buttonText, setButtonText] = useState('Start');
   const [newTimerModalVisible, setNewTimerModalVisible] = useState(false);
+  const [sound, setSound] = useState();
 
   const handlePressStart = () => {
     setCountingDown(!countingDown);
@@ -21,7 +22,7 @@ export default function App() {
 
   const handlePressSave = (id, text, time) => {
     let allTimersCopy = [...allTimers];
-    allTimersCopy.push({id, text, remaining: time});
+    allTimersCopy.push({ id, text, remaining: time });
     setAllTimers(allTimersCopy);
     setNewTimerModalVisible(false);
   };
@@ -34,19 +35,30 @@ export default function App() {
   useEffect(() => setCurrentTimer(0), [])
 
   // custom hook that does the actual countdown
-  function useDoCountDown() {
-    useEffect(() => {
+  // function useDoCountDown() {
+  useEffect(() => {
 
+    if (allTimers.length > 0) {
       let interval = null;
       const timersCopy = [...allTimers];
+      const remaining = timersCopy[currentTimer].remaining;
+      console.log('remaining:', remaining);
+      let currentTimerisFinalTimer = currentTimer == (allTimers.length - 1);
+
+      // case: counting down and current timer is not the final timer 
+      if (remaining <= 0 && !(currentTimerisFinalTimer)) {
+        setCurrentTimer((prevState) => prevState + 1);
+        playSound();
+      } else if (remaining <= 0 && currentTimerisFinalTimer) {
+        setCountingDown(false);
+      }
+
+      // case: counting down and current timer is the final timer 
 
       if (countingDown) {
         const remaining = timersCopy[currentTimer].remaining // get the current time remaining
 
-        // if the timer reaches zero, increment the current timer
-        if (remaining <= 0) {
-          setCurrentTimer((prevState) => prevState + 1);
-        }
+
 
         // do the actual countdown
         interval = setInterval(() => {
@@ -56,12 +68,13 @@ export default function App() {
       } else {
         clearInterval(interval)
       }
-      return () => clearInterval(interval)  // something about memory leaks
+      return () => clearInterval(interval)
+    }  // something about memory leaks
 
-    }, [countingDown, allTimers, currentTimer])
-  }
+  }, [countingDown, allTimers, currentTimer])
+  // }
 
-  useDoCountDown()
+  //  if (allTimers.length > 0) {useDoCountDown()}
 
 
   // Changes the button text from 'start' to 'stop' depending on whether the timer is running
@@ -74,17 +87,24 @@ export default function App() {
   }, [countingDown])
 
 
+  async function playSound() {
+    console.log('Loading Sound');
+    const { sound } = await Audio.Sound.createAsync(require('./assets/meow1.wav')
+    );
+    setSound(sound);
 
-  const timers = allTimers.map((item) => {
-    return (
-      // <li><Timer timeRemaining={item.remaining} /></li>
-      <View><Timer timeRemaining={item.remaining} /></View>
-    )
-  })
+    console.log('Playing Sound');
+    await sound.playAsync();
+  }
 
-
-
-
+  useEffect(() => {
+    return sound
+      ? () => {
+        console.log('Unloading Sound');
+        sound.unloadAsync();
+      }
+      : undefined;
+  }, [sound]);
 
 
   return (
@@ -93,7 +113,7 @@ export default function App() {
         visible={newTimerModalVisible}
         onPressCancel={() => { setNewTimerModalVisible(false) }}
         onPressSave={handlePressSave}
-         />
+      />
       {/* {timers} */}
       <TimerList data={allTimers} />
       <View style={styles.buttonContainer}>

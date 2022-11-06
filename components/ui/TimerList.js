@@ -1,8 +1,10 @@
 import React from 'react'
-import { FlatList, View, StyleSheet } from 'react-native'
+import { FlatList, View, StyleSheet, Text } from 'react-native'
 import Timer from './Timer'
 
 const TimerList = (props) => {
+
+    if (props.data.length > 0) {
     return (
         <View style={styles.listContainer}>
             <FlatList
@@ -12,7 +14,7 @@ const TimerList = (props) => {
                     timeRemaining={item.remaining} />}
             />
         </View>
-    );
+    );} return <View><Text>Add a timer</Text></View>
 }
 
 const styles = StyleSheet.create({
