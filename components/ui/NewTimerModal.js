@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { View, Modal, Text, Button, StyleSheet, TextInput } from 'react-native'
+import globalStyles from '../../globalStyles'
 
 const NewTimerModal = (props) => {
 
@@ -30,55 +31,69 @@ const NewTimerModal = (props) => {
 
 
     return (
-        // <View >
         <Modal
             visible={props.visible}
             animationType='slide'
-            transparent={false}>
+            transparent={true}>
             <View style={styles.container}>
-                <Text style={styles.text}>Create a new timer</Text>
-                <TextInput
-                    style={styles.textInput}
-                    onChangeText={text => handleUserTextInput(text)}
-                    placeholder='new timer name...' />
-                <TextInput
-                    style={styles.textInput}
-                    keyboardType='numeric'
-                    onChangeText={text => handleUserTimeInput(text)}
-                    placeholder='input time in seconds' />
-            </View>
+                <Text style={styles.modalTitle}>Create a new timer</Text>
+                <View style={styles.createTimerCard}>
+                    <TextInput
+                        style={styles.textInput}
+                        onChangeText={text => handleUserTextInput(text)}
+                        placeholder='new timer name...' />
+                    <TextInput
+                        style={styles.textInput}
+                        keyboardType='numeric'
+                        onChangeText={text => handleUserTimeInput(text)}
+                        placeholder='input time in seconds' />
 
-            <View style={styles.buttonContainer}>
-                <Button
-                    title='Dismiss'
-                    onPress={props.onPressCancel}
-                    color='green' />
-                <Button
-                    title="save"
-                    onPress={handleSaveData}
-                    color='pink' />
+                    <View style={styles.buttonContainer}>
+                        <Button
+                            title='Dismiss'
+                            onPress={props.onPressCancel}
+                            color={globalStyles.colours.ACCENT} />
+                        <Button
+                            title="save"
+                            onPress={handleSaveData}
+                            color={globalStyles.colours.ACCENT} />
+                    </View>
+                </View>
             </View>
         </Modal>
-        // </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'yellow',
-        height: '50%',
+        backgroundColor: globalStyles.colours.SECONDARY,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-    text: {
+    createTimerCard: {
+        flexDirection: 'column',
+        alignContent: 'space-between',
+        borderColor: globalStyles.colours.SUCCESS,
+        borderWidth: 4,
+        padding: 10,
+        borderRadius: 5
+    },
+    modalTitle: {
         textAlign: 'center',
         fontSize: 30,
+        color: globalStyles.colours.SUCCESS,
+        marginBottom: 10,
     },
     textInput: {
         borderWidth: 4,
-        borderColor: 'purple',
+        borderColor: globalStyles.colours.TERTIARY,
         paddingLeft: 8,
+        margin: 4,
     },
     buttonContainer: {
         flexDirection: 'row',
+        justifyContent: 'space-around'
     }
 })
 

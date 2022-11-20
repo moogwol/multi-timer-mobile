@@ -165,3 +165,6 @@ docs/pages/versions/*/react-native/*.diff
 /ios/build
 **/ios/.xcode.env.local
 /ios/versioned-react-native/*/ReactNative/sdks/hermes-engine/destroot
+
+# UML diagrams
+*.uxf

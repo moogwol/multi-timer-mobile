@@ -4,7 +4,8 @@ import Timer from './components/ui/Timer';
 import NewTimerModal from './components/ui/NewTimerModal';
 import TimerList from './components/ui/TimerList';
 import { Audio } from 'expo-av';
-import { setStatusBarBackgroundColor } from 'expo-status-bar';
+import useSwitchButtonText from './hooks/useSwitchButtonText';
+import globalStyles from './globalStyles';
 
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
   const [newTimerModalVisible, setNewTimerModalVisible] = useState(false);
   const [sound, setSound] = useState();
 
+
   const handlePressStart = () => {
     setCountingDown(!countingDown);
   }
@@ -26,9 +28,6 @@ export default function App() {
     setAllTimers(allTimersCopy);
     setNewTimerModalVisible(false);
   };
-
-
-
 
 
   // set currentTimer to 0 on first renderer
@@ -49,6 +48,8 @@ export default function App() {
       if (remaining <= 0 && !(currentTimerisFinalTimer)) {
         setCurrentTimer((prevState) => prevState + 1);
         playSound();
+        // useSound(meow);
+
       } else if (remaining <= 0 && currentTimerisFinalTimer) {
         setCountingDown(false);
       }
@@ -72,31 +73,23 @@ export default function App() {
     }  // something about memory leaks
 
   }, [countingDown, allTimers, currentTimer])
-  // }
-
-  //  if (allTimers.length > 0) {useDoCountDown()}
 
 
-  // Changes the button text from 'start' to 'stop' depending on whether the timer is running
-  useEffect(() => {
-    if (countingDown) {
-      setButtonText('Stop');
-    } else {
-      setButtonText('Start');
-    };
-  }, [countingDown])
 
+  useSwitchButtonText(countingDown, setButtonText);
 
+  // Loads a sound and plays it
   async function playSound() {
     console.log('Loading Sound');
     const { sound } = await Audio.Sound.createAsync(require('./assets/meow1.wav')
     );
     setSound(sound);
-
     console.log('Playing Sound');
     await sound.playAsync();
   }
 
+
+  // unloads a sound
   useEffect(() => {
     return sound
       ? () => {
@@ -121,18 +114,24 @@ export default function App() {
           <Button
             title={buttonText}
             onPress={handlePressStart}
-            color='green' />
+            color={globalStyles.colours.SECONDARY} />
         </View>
         <View style={styles.button}>
           <Button
             title='Add new'
             onPress={() => { setNewTimerModalVisible(true) }}
-            color='green' />
+            color={globalStyles.colours.SECONDARY} />
+        </View>
+        <View>
+          <Button
+            title='reset'
+            onPress={() => { 
+              setAllTimers([]);
+              setCurrentTimer(0);
+               }}
+            color={globalStyles.colours.SECONDARY} />
         </View>
       </View>
-
-
-
     </View>
   );
 }
@@ -141,26 +140,25 @@ const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
     padding: 50,
-    backgroundColor: 'orange',
+    backgroundColor: globalStyles.colours.PRIMARY,
 
   },
 
   textInput: {
     flex: 3,
     borderWidth: 1,
-    borderColor: '#cccccc',
+    borderColor: globalStyles.colours.PRIMARY,
     // width: '80%',
     paddingLeft: 5,
     marginRight: 8,
   },
   buttonContainer: {
     flexDirection: 'row',
-    backgroundColor: 'blue',
     marginTop: 8,
     justifyContent: 'space-around'
 
   },
   button: {
-    flexBasis: 300,
+    flexDirection: 'row',    
   },
 });

@@ -1,6 +1,7 @@
-import React from 'react'
-import { FlatList, View, StyleSheet, Text } from 'react-native'
-import Timer from './Timer'
+import React from 'react';
+import { FlatList, View, StyleSheet, Text } from 'react-native';
+import Timer from './Timer';
+import globalStyles from '../../globalStyles';
 
 const TimerList = (props) => {
 
@@ -19,9 +20,9 @@ const TimerList = (props) => {
 
 const styles = StyleSheet.create({
     listContainer: {
-        backgroundColor: 'red',
+        backgroundColor: globalStyles.colours.TERTIARY,
         borderWidth: 4,
-        borderColor: 'purple',
+        borderColor: globalStyles.colours.ACCENT,
         borderRadius: 8,
         padding: 8,
         marginRight: 8,

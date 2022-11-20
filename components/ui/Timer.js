@@ -2,14 +2,14 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native';
 import Clock from './Clock'
 import TimerName from './TimerName'
+import globalStyles from '../../globalStyles';
 
 const Timer = (props) => {
   return (
     <View style={styles.timerContainer}>
       <TimerName
-        style={styles.text}
         text={props.text} />
-      <Clock style={styles.clock}
+      <Clock
         timeRemaining={props.timeRemaining} />
     </View>
   )
@@ -18,24 +18,15 @@ const Timer = (props) => {
 const styles = StyleSheet.create({
   timerContainer: {
     flexDirection: 'row',
-    backgroundColor: '#cccccc',
+    justifyContent: 'space-around',
+    backgroundColor: globalStyles.colours.PRIMARY,
     height: 50,
     borderWidth: 2,
-    borderColor: 'blue',
+    borderColor: globalStyles.colours.ACCENT,
     alignItems: 'center',
     borderRadius: 5,
-    paddingLeft: 8,
-    paddingRight: 8,
-    margin: 8,
+    margin: 5,
   },
-  text: {
-    flex: 2,
-  },
-  clock: {
-    flex: 1,
-    borderWidth: 3,
-    borderColor: 'red',
-  }
 })
 
 export default Timer
